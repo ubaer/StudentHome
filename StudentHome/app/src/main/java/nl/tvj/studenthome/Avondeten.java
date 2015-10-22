@@ -16,8 +16,8 @@ public class Avondeten extends Activiteit {
     Date startijd;
     ArrayList<String>votingOptions;
 
-    Avondeten(double totaalbedrag, String omschrijving, Gebruiker host, Date startijd) {
-        super(totaalbedrag, omschrijving, host, startijd);
+    Avondeten(int id, double totaalbedrag, String omschrijving, Gebruiker host, Date startijd) {
+        super(id, totaalbedrag, omschrijving, host, startijd);
         votingOptions = new ArrayList<>();
     }
     @Override

@@ -8,8 +8,8 @@ import java.util.Date;
 public class CookOff extends Avondeten {
     public boolean titelVerdediger;
     CookOff tegenstander;
-    CookOff(double totaalbedrag, String omschrijving, Gebruiker host, Date startijd, boolean titelVerdediger, CookOff tegenstander) {
-        super(totaalbedrag, omschrijving, host, startijd);
+    CookOff(int id, double totaalbedrag, String omschrijving, Gebruiker host, Date startijd, boolean titelVerdediger, CookOff tegenstander) {
+        super(id, totaalbedrag, omschrijving, host, startijd);
         this.titelVerdediger = titelVerdediger;
         this.tegenstander = tegenstander;
     }

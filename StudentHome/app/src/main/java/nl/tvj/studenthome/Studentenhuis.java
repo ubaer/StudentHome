@@ -111,16 +111,23 @@ public class Studentenhuis {
             }
         }
 
-        if (!alBeoordeeld) {
-            boolean returnValue = activiteit.addBeoordeling(new Beoordeling(beoordeeldDoor, Beoordeling));
+        boolean returnValue = false;
 
-            if (activiteit.getIedereenGestemd() && activiteit instanceof CookOff) {
-                //  Vergelijk beoordeling van andere CookOff
-            }
+        if (!alBeoordeeld) {
+            returnValue = activiteit.addBeoordeling(new Beoordeling(beoordeeldDoor, Beoordeling));
+
+            //TODO vergelijken van cook-off resultaten
+//            if (activiteit.getIedereenGestemd() && activiteit instanceof CookOff) {
+//                //  Vergelijk beoordeling van andere CookOff
+//                CookOff cookOff = (CookOff)activiteit;
+//                if (cookOff.tegenstander.getIedereenGestemd()) {
+//                    //
+//                }
+//            }
 
             return returnValue;
         }
-        return false;
+        return returnValue;
     }
 
     //TODO invullen
