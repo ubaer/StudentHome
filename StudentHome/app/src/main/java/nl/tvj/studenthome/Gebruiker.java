@@ -15,6 +15,7 @@ public class Gebruiker {
         this.wachtwoord = wachtwoord;
         this.naam = naam;
     }
+    public int getId() { return id; }
     public String getNaam(){
         return naam;
     }
