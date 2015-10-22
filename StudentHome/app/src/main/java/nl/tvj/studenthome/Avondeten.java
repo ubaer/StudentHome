@@ -20,35 +20,4 @@ public class Avondeten extends Activiteit {
         super(id, totaalbedrag, omschrijving, host, startijd);
         votingOptions = new ArrayList<>();
     }
-    @Override
-    public boolean getIedereenGestemd() {
-        return false;
-    }
-
-    @Override
-    public void setIedereenGestemd(boolean iedereenGestemd) {
-
-    }
-
-    @Override
-    public boolean addDeelnemer(Gebruiker deelnemer) {
-        //TODO Database methode implementeren
-        //  return db.addDeelnemer(deelnemer, this)
-        return false;
-    }
-
-    @Override
-    public void setTotaalbedrag(double totaalbedrag) {
-
-    }
-
-    @Override
-    public boolean addVotingOption(String option) {
-        return false;
-    }
-
-    @Override
-    public ArrayList<Gebruiker> getDeelnemers() {
-        return null;
-    }
 }

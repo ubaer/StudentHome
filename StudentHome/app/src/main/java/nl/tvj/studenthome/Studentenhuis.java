@@ -18,6 +18,7 @@ public class Studentenhuis {
     String naam;
     double longitude;
     double latitude;
+    Database db;
 
     public Studentenhuis(int id, String adres, String verstigingsplaats, String postcode, String naam, Gebruiker huisBaas) {
         this.id = id;
@@ -29,6 +30,7 @@ public class Studentenhuis {
         this.huisBewoners = new ArrayList<>();
         this.klasseringen = new ArrayList<>();
         this.activiteiten = new ArrayList<>();
+        db = new Database();
     }
     public String getNaam(){
         return naam;
@@ -66,8 +68,11 @@ public class Studentenhuis {
         }
 
         if(!excists) {
-            huisBewoners.add(bewoner);
-            return true;
+            if (db.addHuisbewoner(this, bewoner)) {
+                huisBewoners.add(bewoner);
+                return true;
+            }
+            return false;
         }
         else {
             return false;
@@ -75,20 +80,42 @@ public class Studentenhuis {
     }
 
     //TODO invullen
-    public boolean addActiviteit(Gebruiker host, String omschrijving,Date starttijd){
+    public boolean addActiviteit(Activiteit activiteit, boolean tochDoorgaan){
+        if (!overlappenActiviteiten(activiteit)) {
+            if (tochDoorgaan && (!(activiteit instanceof Avondeten))) {
+                if (db.addActiviteit(this, activiteit)) {
+                    activiteiten.add(activiteit);
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
     //TODO invullen
-    public boolean overlappenActiviteiten(Date starttijd){
-        return false;
+    public boolean overlappenActiviteiten(Activiteit activiteit){
+        //  Check voor elk type activiteit of er overlap is op dezelfde dag
+        boolean overlap = false;
+        for (Activiteit a : activiteiten) {
+            if (a.getClass() == activiteit.getClass() && activiteit instanceof Avondeten) {
+                if (a.starttijd.getTime() == activiteit.starttijd.getTime()) {
+                    overlap = true;
+                }
+            }
+            else if (a.getClass() == activiteit.getClass()){
+                if (a.starttijd.getDate() == activiteit.starttijd.getDate()) {
+                    overlap = true;
+                }
+            }
+        }
+        return overlap;
     }
 
     //kijkt of de gebruiker niet al in de activiteit zit en voegd hem vervolgens toe
     public boolean joinActiviteit(Gebruiker deelnemer, Activiteit activiteit){
         for(Activiteit a : activiteiten){
             if(a == activiteit){
-                ArrayList<Gebruiker>deelnemers = a.getDeelnemers();
+                ArrayList<Gebruiker> deelnemers = a.getDeelnemers();
                 boolean excists = false;
                 for(Gebruiker gebruiker : deelnemers)
                 {
@@ -133,7 +160,37 @@ public class Studentenhuis {
     }
 
     //TODO invullen
-    public boolean createCookOff(Gebruiker verdediger, Gebruiker uitdager, Activiteit activiteitVerdediger, Activiteit activiteitUitdager){
+    public boolean createCookOff(Gebruiker verdediger, Gebruiker uitdager, CookOff activiteitVerdediger, CookOff activiteitUitdager, boolean tochDoorgaan){
+        //  Kijk of de CookOff-activiteiten niet op dezelfde dag worden uitgevoerd
+        if (activiteitVerdediger.starttijd.getDate() == activiteitUitdager.starttijd.getDate()) {
+            return false;
+        }
+
+        //  Kijk of de verdediger en uitdager niet dezelfde Gebruiker zijn
+        if (verdediger.equals(uitdager)) {
+            return false;
+        }
+
+        if (!overlappenActiviteiten(activiteitUitdager) && !overlappenActiviteiten(activiteitVerdediger)) {
+            if (db.addActiviteit(this, activiteitUitdager) && db.addActiviteit(this, activiteitVerdediger)) {
+                //TODO onderstaande DRIE regels code in de 'main activity' of de activity waar een cook-off wordt aangegaan plaatsen
+//                CookOff coUitdager = new CookOff(activiteitUitdager.getId(), activiteitUitdager.totaalbedrag, activiteitUitdager.omschrijving, activiteitUitdager.host, activiteitUitdager.starttijd, false, null);
+//                CookOff coVerdediger = new CookOff(activiteitVerdediger.getId(), activiteitVerdediger.totaalbedrag, activiteitVerdediger.omschrijving, activiteitVerdediger.host, activiteitVerdediger.starttijd, true, coUitdager);
+//                coUitdager.tegenstander = coVerdediger;
+
+                activiteiten.add(activiteitUitdager);
+                activiteiten.add(activiteitVerdediger);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public boolean addVotingOption(Activiteit activiteit, String option) {
+        if (!option.isEmpty()) {
+            return activiteit.addVotingOption(option);
+        }
         return false;
     }
     public int getId ()

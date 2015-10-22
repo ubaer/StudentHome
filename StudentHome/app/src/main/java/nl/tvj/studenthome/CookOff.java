@@ -16,15 +16,17 @@ public class CookOff extends Avondeten {
 
     @Override
     public boolean addBeoordeling(Beoordeling beoordeling) {
-        beoordelingen.add(beoordeling);
+        if (db.addBeoordeling(this, beoordeling)) {
+            beoordelingen.add(beoordeling);
+        }
+        else {
+            return false;
+        }
 
         if (beoordelingen.size() == deelnemers.size()) {
             setIedereenGestemd(true);
         }
 
-        //TODO Database methode implementeren
-        //  db.addBeoordeling(this, beoordeling);
-
-        return false;
+        return true;
     }
 }

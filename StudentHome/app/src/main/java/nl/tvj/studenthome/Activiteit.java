@@ -13,19 +13,23 @@ public abstract class Activiteit {
     Gebruiker host;
     ArrayList<Gebruiker> deelnemers;
     ArrayList<Beoordeling> beoordelingen;
-    Date startijd;
+    Date starttijd;
     Database db;
     boolean iedereenGestemd;
+    ArrayList<String> votingOptions;
 
-    Activiteit(int id, double totaalbedrag, String omschrijving, Gebruiker host, Date startijd) {
+
+    Activiteit(int id, double totaalbedrag, String omschrijving, Gebruiker host, Date starttijd) {
         this.id = id;
         this.totaalbedrag = totaalbedrag;
         this.omschrijving = omschrijving;
         this.host = host;
-        this.startijd = startijd;
+        this.starttijd = starttijd;
         deelnemers = new ArrayList<>();
         beoordelingen = new ArrayList<>();
         db = new Database();
+        iedereenGestemd = false;
+        votingOptions = new ArrayList<>();
     }
 
     public int getId() {
@@ -40,18 +44,33 @@ public abstract class Activiteit {
         this.iedereenGestemd = iedereenGestemd;
     }
 
-    abstract public boolean addDeelnemer(Gebruiker deelnemer);
-    abstract public void setTotaalbedrag(double totaalbedrag);
+    public boolean addDeelnemer(Gebruiker deelnemer) {
+        return db.addDeelnemer(this, deelnemer);
+    }
+
+    public void setTotaalbedrag(double totaalbedrag) {
+        this.totaalbedrag = totaalbedrag;
+    }
 
     public boolean addBeoordeling(Beoordeling beoordeling) {
-        beoordelingen.add(beoordeling);
-
-        //TODO Database methode implementeren
-        //  db.addBeoordeling(this, beoordeling);
+        if (db.addBeoordeling(this, beoordeling)) {
+            beoordelingen.add(beoordeling);
+            return true;
+        }
 
         return false;
     }
 
-    abstract public boolean addVotingOption(String option);
-    abstract public ArrayList<Gebruiker> getDeelnemers();
+    public boolean addVotingOption(String option) {
+        if (db.addVotingOption(this, option)) {
+            this.votingOptions.add(option);
+            return true;
+        }
+
+        return false;
+    }
+
+    public ArrayList<Gebruiker> getDeelnemers() {
+        return this.deelnemers;
+    }
 }
