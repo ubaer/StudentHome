@@ -11,8 +11,10 @@ public abstract class Activiteit {
     String omschrijving;
     Gebruiker host;
     ArrayList<Gebruiker> deelnemers;
-    ArrayList<Beoordeling>beoordelingen;
+    ArrayList<Beoordeling> beoordelingen;
     Date startijd;
+    Database db;
+    boolean iedereenGestemd;
 
     Activiteit(double totaalbedrag, String omschrijving, Gebruiker host, Date startijd) {
         this.totaalbedrag = totaalbedrag;
@@ -21,12 +23,30 @@ public abstract class Activiteit {
         this.startijd = startijd;
         deelnemers = new ArrayList<>();
         beoordelingen = new ArrayList<>();
+        db = new Database();
     }
-    abstract public boolean getIedereenGestemd();
-    abstract public void setIedereenGestemd(boolean iedereenGestemd);
-    abstract public void addDeelnemer(Gebruiker deelnemer);
+
+    public boolean getIedereenGestemd() {
+        return this.iedereenGestemd;
+    }
+
+    public void setIedereenGestemd(boolean iedereenGestemd) {
+        this.iedereenGestemd = iedereenGestemd;
+    }
+
+    abstract public boolean addDeelnemer(Gebruiker deelnemer);
     abstract public void setTotaalbedrag(double totaalbedrag);
-    abstract public Beoordeling addBeoordeling(Beoordeling beoordeling);
+
+    public boolean addBeoordeling(Beoordeling beoordeling) {
+        beoordelingen.add(beoordeling);
+
+        if (beoordelingen.size() == deelnemers.size()) {
+            setIedereenGestemd(true);
+        }
+
+        return false;
+    }
+
     abstract public boolean addVotingOption(String option);
     abstract public ArrayList<Gebruiker> getDeelnemers();
 }

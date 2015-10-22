@@ -31,18 +31,15 @@ public class Avondeten extends Activiteit {
     }
 
     @Override
-    public void addDeelnemer(Gebruiker deelnemer) {
-
+    public boolean addDeelnemer(Gebruiker deelnemer) {
+        //TODO Database methode implementeren
+        //  return db.addDeelnemer(deelnemer, this)
+        return false;
     }
 
     @Override
     public void setTotaalbedrag(double totaalbedrag) {
 
-    }
-
-    @Override
-    public Beoordeling addBeoordeling(Beoordeling beoordeling) {
-        return null;
     }
 
     @Override

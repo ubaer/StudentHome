@@ -31,30 +31,38 @@ public class Studentenhuis {
     public String getNaam(){
         return naam;
     }
+
     public void setNaam(String naam){
         this.naam = naam;
     }
+
     public double getLongitude(){
         return longitude;
     }
+
     public void setLongitude(double longitude)
     {
         this.longitude = longitude;
     }
+
     public void setLatitude(double latitude){
         this.latitude = latitude;
     }
+
     public double getLatitude(){
         return latitude;
     }
+
     public boolean addBewoner(Gebruiker bewoner){
-        //kijkt of de bewoner nog niet in de lijst staat
+        //  Kijkt of de bewoner nog niet in de lijst staat
         boolean excists = false;
-        for (Gebruiker g : huisBewoners){
-            if(g == bewoner){
+
+        for (Gebruiker g : huisBewoners) {
+            if (g == bewoner) {
                 excists = true;
             }
         }
+
         if(!excists) {
             huisBewoners.add(bewoner);
             return true;
@@ -63,14 +71,17 @@ public class Studentenhuis {
             return false;
         }
     }
+
     //TODO invullen
     public boolean addActiviteit(Gebruiker host, String omschrijving,Date starttijd){
         return false;
     }
+
     //TODO invullen
     public boolean overlappenActiviteiten(Date starttijd){
         return false;
     }
+
     //kijkt of de gebruiker niet al in de activiteit zit en voegd hem vervolgens toe
     public boolean joinActiviteit(Gebruiker deelnemer, Activiteit activiteit){
         for(Activiteit a : activiteiten){
@@ -83,17 +94,35 @@ public class Studentenhuis {
                         excists = true;
                 }
                 if(!excists) {
-                    activiteit.addDeelnemer(deelnemer);
-                    return true;
+                    return activiteit.addDeelnemer(deelnemer);
                 }
             }
         }
         return false;
     }
-    //TODO invullen
-    public void addBeoordeling(Activiteit activiteit, double Beoordeling, Gebruiker beoordeeldDoor){
 
+    //TODO invullen
+    public boolean addBeoordeling(Activiteit activiteit, double Beoordeling, Gebruiker beoordeeldDoor){
+        //  Kijkt of de Gebruiker de activiteit al beoordeeld heeft
+        boolean alBeoordeeld = false;
+        for (Beoordeling b : activiteit.beoordelingen) {
+            if (b.beoordeeldDoor.equals(beoordeeldDoor)) {
+                alBeoordeeld = true;
+            }
+        }
+
+        if (!alBeoordeeld) {
+            boolean returnValue = activiteit.addBeoordeling(new Beoordeling(beoordeeldDoor, Beoordeling));
+
+            if (activiteit.getIedereenGestemd()) {
+                
+            }
+
+            return returnValue;
+        }
+        return false;
     }
+
     //TODO invullen
     public boolean createCookOff(Gebruiker verdediger, Gebruiker uitdager, Activiteit activiteitVerdediger, Activiteit activiteitUitdager){
         return false;
