@@ -49,4 +49,9 @@ public class Avondeten extends Activiteit {
     public boolean addVotingOption(String option) {
         return false;
     }
+
+    @Override
+    public ArrayList<Gebruiker> getDeelnemers() {
+        return null;
+    }
 }

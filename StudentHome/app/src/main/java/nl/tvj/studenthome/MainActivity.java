@@ -7,10 +7,18 @@ import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity {
 
+    Database dbm = new Database();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Thread mythread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+               boolean info =  DatabaseTest();
+            }
+        });
+        mythread.start();
     }
 
     @Override
@@ -33,5 +41,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+    public boolean DatabaseTest(){
+       return dbm.connect();
     }
 }
