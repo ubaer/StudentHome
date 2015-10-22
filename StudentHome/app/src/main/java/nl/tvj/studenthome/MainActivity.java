@@ -5,6 +5,10 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.lang.reflect.Array;
+import java.sql.SQLException;
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
 
     Database dbm = new Database();
@@ -15,7 +19,11 @@ public class MainActivity extends AppCompatActivity {
         Thread mythread = new Thread(new Runnable() {
             @Override
             public void run() {
-               boolean info =  DatabaseTest();
+                try {
+                    ArrayList<Gebruiker> gebruikerArrayList =  DatabaseTest();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
             }
         });
         mythread.start();
@@ -42,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-    public boolean DatabaseTest(){
-       return dbm.connect();
+    public ArrayList<Gebruiker>  DatabaseTest() throws SQLException {
+       return dbm.getGebruikersInHuis(1);
     }
 }

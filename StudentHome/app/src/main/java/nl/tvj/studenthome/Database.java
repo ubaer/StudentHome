@@ -2,7 +2,9 @@ package nl.tvj.studenthome;
 
 import android.os.StrictMode;
 
+import java.lang.reflect.Array;
 import java.sql.Connection;
+import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,11 +22,11 @@ public class Database {
         System.out.println(" meh ");
     }
 
-    public static boolean connect(){
+    public static boolean connect() {
 
-        try{
+        try {
             Class.forName("com.mysql.jdbc.Driver").newInstance();
-        }catch(Exception e){
+        } catch (Exception e) {
             System.err.println("Cannot create connection");
         }
         try {
@@ -39,22 +41,30 @@ public class Database {
     }
 
     //insert methode
-    public  void insertScore(String name, int score) throws SQLException{
+    public void insertScore(String name, int score) throws SQLException {
         conn.createStatement().execute("INSERT INTO HIGHSCORE(Name, Score) VALUES('" + name + "', " + score + ")");
     }
+    
 
-    //Get list methode
-    public  ArrayList<String> getScores() throws SQLException{
-        ArrayList<String> highscores= new ArrayList<>();
-        ResultSet rs = conn.prepareStatement("SELECT * FROM HIGHSCORE").executeQuery();
-
-        while (rs.next()) {
-            System.out.print(rs.getString(1));
-            System.out.print(": ");
-            System.out.println(rs.getInt(2));
-            highscores.add(rs.getString(1));
+    public ArrayList<Gebruiker> getGebruikersInHuis(int HuisID) throws SQLException {
+        ArrayList<Gebruiker> gebruikers = new ArrayList<>();
+        try {
+            connect();
+            ResultSet rs = conn.prepareStatement("SELECT g.* FROM Gebruiker g, StudentenHuis sh WHERE sh.`ID` = 1 AND g.`StudentenhuisID` = sh.`ID`").executeQuery();
+            while (rs.next()) {
+                int id = rs.getInt(1);
+                String gebruikersnaam = rs.getString(2);
+                String wachtwoord = rs.getString(3);
+                String naam = rs.getString(4);
+                Gebruiker gebruiker = new Gebruiker(id, gebruikersnaam, wachtwoord, naam);
+                gebruikers.add(gebruiker);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            conn.close();
         }
-
-        return highscores;
+        return gebruikers;
     }
+
 }
