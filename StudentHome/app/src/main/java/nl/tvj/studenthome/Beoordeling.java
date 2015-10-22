@@ -11,4 +11,8 @@ public class Beoordeling {
         this.beoordeeldDoor = beoordeeldDoor;
         this.beoordeling = beoordeling;
     }
+    public double getBeoordeling()
+    {
+        return beoordeling;
+    }
 }

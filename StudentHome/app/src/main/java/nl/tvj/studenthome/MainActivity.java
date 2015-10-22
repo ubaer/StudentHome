@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import java.lang.reflect.Array;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -20,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 try {
-                    ArrayList<Gebruiker> gebruikerArrayList =  DatabaseTest();
+                   boolean testbool =  DatabaseTest();
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -50,7 +51,9 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-    public ArrayList<Gebruiker>  DatabaseTest() throws SQLException {
-       return dbm.getGebruikersInHuis(1);
+    public boolean  DatabaseTest() throws SQLException {
+        Gebruiker test = new Gebruiker(1, "geb","pass","naam");
+        Activiteit activiteit = new Avondeten(1,1,"ok",test, new Date());
+        return dbm.addDeelnemer(test, activiteit);
     }
 }

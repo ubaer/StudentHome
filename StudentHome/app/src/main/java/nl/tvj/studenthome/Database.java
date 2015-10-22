@@ -44,7 +44,7 @@ public class Database {
     public void insertScore(String name, int score) throws SQLException {
         conn.createStatement().execute("INSERT INTO HIGHSCORE(Name, Score) VALUES('" + name + "', " + score + ")");
     }
-    
+
 
     public ArrayList<Gebruiker> getGebruikersInHuis(int HuisID) throws SQLException {
         ArrayList<Gebruiker> gebruikers = new ArrayList<>();
@@ -67,4 +67,57 @@ public class Database {
         return gebruikers;
     }
 
+    public boolean addDeelnemer(Gebruiker gebruiker, Activiteit activiteit) throws SQLException {
+        boolean gelukt = false;
+        try {
+            connect();
+            conn.createStatement().execute("INSERT INTO ActiviteitGebruiker VALUES("+ activiteit.getId() +","+ gebruiker.getId() +",NULL,NULL)");
+            gelukt = true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            conn.close();
+        }
+        return gelukt;
+    }
+    public boolean addBeoordeling(Activiteit activiteit, Beoordeling beoordeling) throws SQLException {
+        boolean gelukt = false;
+        try {
+            connect();
+            conn.createStatement().execute("UPDATE  ActiviteitGebruiker SET beoordeling = "+beoordeling.getBeoordeling() +" WHERE activiteitID ="+ activiteit.getId()+ "AND gebruikerID ="+ beoordeling.beoordeeldDoor.getId() );
+            gelukt = true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            conn.close();
+        }
+        return gelukt;
+    }
+    public boolean addHuisbewoner(Studentenhuis studentenhuis, Gebruiker gebruiker) throws SQLException {
+        boolean gelukt = false;
+        try {
+            connect();
+            conn.createStatement().execute("UPDATE Gebruiker SET StudentenhuisID = " + studentenhuis.getId() + " WHERE ID = " + gebruiker.getId());
+            gelukt = true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            conn.close();
+        }
+        return gelukt;
+    }
+    public boolean addActiviteit(Studentenhuis studentenhuis, Activiteit activiteit) throws SQLException {
+        boolean gelukt = false;
+        try {
+            connect();
+            conn.createStatement().execute("INSERT INTO Activiteit(totdaalbedrag, omschrijving, GebruikerID, starttijd)VALUES("+activiteit.totaalbedrag+","+activiteit.omschrijving+","+activiteit.host.getId()+","+activiteit.startijd+");");
+            conn.createStatement().execute("INSERT INTO "); // toevoegen aan Studenthuis Activiteit
+            gelukt = true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            conn.close();
+        }
+        return gelukt;
+    }
 }

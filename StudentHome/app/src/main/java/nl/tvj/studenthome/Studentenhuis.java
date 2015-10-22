@@ -7,6 +7,7 @@ import java.util.Date;
  * Created by Kevin on 15-10-2015.
  */
 public class Studentenhuis {
+    int id;
     ArrayList<Gebruiker>huisBewoners;
     Gebruiker huisBaas;
     ArrayList<IKlassering>klasseringen;
@@ -18,7 +19,8 @@ public class Studentenhuis {
     double longitude;
     double latitude;
 
-    public Studentenhuis(String adres, String verstigingsplaats, String postcode, String naam, Gebruiker huisBaas) {
+    public Studentenhuis(int id, String adres, String verstigingsplaats, String postcode, String naam, Gebruiker huisBaas) {
+        this.id = id;
         this.huisBaas = huisBaas;
         this.adres = adres;
         this.verstigingsplaats = verstigingsplaats;
@@ -133,5 +135,9 @@ public class Studentenhuis {
     //TODO invullen
     public boolean createCookOff(Gebruiker verdediger, Gebruiker uitdager, Activiteit activiteitVerdediger, Activiteit activiteitUitdager){
         return false;
+    }
+    public int getId ()
+    {
+        return id;
     }
 }
