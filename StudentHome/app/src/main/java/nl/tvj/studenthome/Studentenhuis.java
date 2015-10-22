@@ -103,7 +103,7 @@ public class Studentenhuis {
 
     //TODO invullen
     public boolean addBeoordeling(Activiteit activiteit, double Beoordeling, Gebruiker beoordeeldDoor){
-        //  Kijkt of de Gebruiker de activiteit al beoordeeld heeft
+        //  Kijkt of de gebruiker de activiteit al beoordeeld heeft
         boolean alBeoordeeld = false;
         for (Beoordeling b : activiteit.beoordelingen) {
             if (b.beoordeeldDoor.equals(beoordeeldDoor)) {
@@ -114,8 +114,8 @@ public class Studentenhuis {
         if (!alBeoordeeld) {
             boolean returnValue = activiteit.addBeoordeling(new Beoordeling(beoordeeldDoor, Beoordeling));
 
-            if (activiteit.getIedereenGestemd()) {
-                
+            if (activiteit.getIedereenGestemd() && activiteit instanceof CookOff) {
+                //  Vergelijk beoordeling van andere CookOff
             }
 
             return returnValue;

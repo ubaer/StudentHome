@@ -13,4 +13,18 @@ public class CookOff extends Avondeten {
         this.titelVerdediger = titelVerdediger;
         this.tegenstander = tegenstander;
     }
+
+    @Override
+    public boolean addBeoordeling(Beoordeling beoordeling) {
+        beoordelingen.add(beoordeling);
+
+        if (beoordelingen.size() == deelnemers.size()) {
+            setIedereenGestemd(true);
+        }
+
+        //TODO Database methode implementeren
+        //  db.addBeoordeling(this, beoordeling);
+
+        return false;
+    }
 }
