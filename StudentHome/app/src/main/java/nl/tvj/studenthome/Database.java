@@ -110,9 +110,51 @@ public class Database {
         boolean gelukt = false;
         try {
             connect();
-            conn.createStatement().execute("INSERT INTO Activiteit(totdaalbedrag, omschrijving, GebruikerID, starttijd)VALUES("+activiteit.totaalbedrag+","+activiteit.omschrijving+","+activiteit.host.getId()+","+activiteit.startijd+");");
-            conn.createStatement().execute("INSERT INTO "); // toevoegen aan Studenthuis Activiteit
+            conn.createStatement().execute("INSERT INTO Activiteit(totdaalbedrag, omschrijving, GebruikerID, starttijd)VALUES(" + activiteit.totaalbedrag + "," + activiteit.omschrijving + "," + activiteit.host.getId() + "," + activiteit.starttijd + ");");
+            int maxID = getMaxActiviteitID();
+            conn.createStatement().execute("INSERT INTO Activiteit_Studentenhuis VALUES ("+studentenhuis.getId()+","+maxID+") "); // toevoegen aan Studenthuis Activiteit
             gelukt = true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            conn.close();
+        }
+        return gelukt;
+    }
+    public int getMaxActiviteitID() throws SQLException {
+        int maxID = 0;
+        try {
+            connect();
+            ResultSet rs = conn.prepareStatement("SELECT MAX(id) FROM activiteit ").executeQuery();
+            while (rs.next()) {
+                maxID = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            conn.close();
+        }
+        return maxID;
+    }
+    public boolean addGebruikerActiviteit(Gebruiker gebruiker, Activiteit activiteit) throws SQLException {
+        boolean gelukt = false;
+        try {
+            connect();
+            conn.createStatement().execute("INSERT INTO Activiteit_Gebruiker VALUES("+activiteit.getId()+","+gebruiker.getId()+")");
+            gelukt = true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            conn.close();
+        }
+        return gelukt;
+    }
+    public boolean addBeoordelingActiviteit(Activiteit activiteit, Beoordeling beoordeling) throws SQLException {
+        boolean gelukt = false;
+        try {
+            connect();
+            conn.createStatement().execute("INSERT INTO Beoordeling VALUES ("+activiteit.getId()+","+beoordeling.beoordeeldDoor.getId()+","+beoordeling.beoordeling+")");
+           gelukt = true;
         } catch (SQLException e) {
             e.printStackTrace();
         }finally {
