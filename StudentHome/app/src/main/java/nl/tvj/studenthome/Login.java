@@ -1,41 +1,31 @@
 package nl.tvj.studenthome;
 
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
-import java.lang.reflect.Array;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Date;
+public class Login extends AppCompatActivity {
+    private Database db;
+    private boolean connected;
 
-public class MainActivity extends AppCompatActivity {
-
-    Database dbm = new Database();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_login);
 
-        setContentView(R.layout.activity_main);
-        Thread mythread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                   boolean testbool =  DatabaseTest();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+        db = new Database();
+        connected = false;
 
-        mythread.start();
+        new showConnectionResult().execute((Void[])null);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_login, menu);
         return true;
     }
 
@@ -54,10 +44,21 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public boolean  DatabaseTest() throws SQLException {
-        dbm.connect();
-        Gebruiker test = new Gebruiker(1, "geb","pass","naam");
-        Activiteit activiteit = new Avondeten(1,1,"ok",test, new Date());
-        return dbm.addDeelnemer(test, activiteit);
+    private class showConnectionResult extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... params) {
+            connected = db.connect();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void param) {
+            if (connected) {
+                Toast.makeText(Login.this, "Database connectie geslaagd", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            Toast.makeText(Login.this, "Database connectie gefaald", Toast.LENGTH_SHORT).show();
+        }
     }
 }

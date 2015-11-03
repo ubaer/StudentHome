@@ -1,5 +1,6 @@
 package nl.tvj.studenthome;
 
+import java.sql.SQLException;
 import java.util.Date;
 
 /**
@@ -16,11 +17,15 @@ public class CookOff extends Avondeten {
 
     @Override
     public boolean addBeoordeling(Beoordeling beoordeling) {
-        if (db.addBeoordeling(this, beoordeling)) {
-            beoordelingen.add(beoordeling);
-        }
-        else {
-            return false;
+        try {
+            if (db.addBeoordeling(this, beoordeling)) {
+                beoordelingen.add(beoordeling);
+            }
+            else {
+                return false;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
 
         if (beoordelingen.size() == deelnemers.size()) {

@@ -1,5 +1,6 @@
 package nl.tvj.studenthome;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -45,7 +46,12 @@ public abstract class Activiteit {
     }
 
     public boolean addDeelnemer(Gebruiker deelnemer) {
-        return db.addDeelnemer(this, deelnemer);
+        try {
+            return db.addDeelnemer(deelnemer, this);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     public void setTotaalbedrag(double totaalbedrag) {
@@ -53,20 +59,25 @@ public abstract class Activiteit {
     }
 
     public boolean addBeoordeling(Beoordeling beoordeling) {
-        if (db.addBeoordeling(this, beoordeling)) {
-            beoordelingen.add(beoordeling);
-            return true;
+        try {
+            if (db.addBeoordeling(this, beoordeling)) {
+                beoordelingen.add(beoordeling);
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
 
         return false;
     }
 
     public boolean addVotingOption(String option) {
-        if (db.addVotingOption(this, option)) {
-            this.votingOptions.add(option);
-            return true;
-        }
-
+        //  TODO voor eventuele latere versie van de app
+//        if (db.addVotingOption(this, option)) {
+//            this.votingOptions.add(option);
+//            return true;
+//        }
+//
         return false;
     }
 

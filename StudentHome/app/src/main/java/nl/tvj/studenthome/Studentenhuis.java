@@ -1,5 +1,6 @@
 package nl.tvj.studenthome;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -68,9 +69,13 @@ public class Studentenhuis {
         }
 
         if(!excists) {
-            if (db.addHuisbewoner(this, bewoner)) {
-                huisBewoners.add(bewoner);
-                return true;
+            try {
+                if (db.addHuisbewoner(this, bewoner)) {
+                    huisBewoners.add(bewoner);
+                    return true;
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
             return false;
         }
@@ -83,9 +88,13 @@ public class Studentenhuis {
     public boolean addActiviteit(Activiteit activiteit, boolean tochDoorgaan){
         if (!overlappenActiviteiten(activiteit)) {
             if (tochDoorgaan && (!(activiteit instanceof Avondeten))) {
-                if (db.addActiviteit(this, activiteit)) {
-                    activiteiten.add(activiteit);
-                    return true;
+                try {
+                    if (db.addActiviteit(this, activiteit)) {
+                        activiteiten.add(activiteit);
+                        return true;
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
                 }
             }
         }
@@ -172,15 +181,19 @@ public class Studentenhuis {
         }
 
         if (!overlappenActiviteiten(activiteitUitdager) && !overlappenActiviteiten(activiteitVerdediger)) {
-            if (db.addActiviteit(this, activiteitUitdager) && db.addActiviteit(this, activiteitVerdediger)) {
-                //TODO onderstaande DRIE regels code in de 'main activity' of de activity waar een cook-off wordt aangegaan plaatsen
-//                CookOff coUitdager = new CookOff(activiteitUitdager.getId(), activiteitUitdager.totaalbedrag, activiteitUitdager.omschrijving, activiteitUitdager.host, activiteitUitdager.starttijd, false, null);
-//                CookOff coVerdediger = new CookOff(activiteitVerdediger.getId(), activiteitVerdediger.totaalbedrag, activiteitVerdediger.omschrijving, activiteitVerdediger.host, activiteitVerdediger.starttijd, true, coUitdager);
-//                coUitdager.tegenstander = coVerdediger;
+            try {
+                if (db.addActiviteit(this, activiteitUitdager) && db.addActiviteit(this, activiteitVerdediger)) {
+                    //TODO onderstaande DRIE regels code in de 'main activity' of de activity waar een cook-off wordt aangegaan plaatsen
+    //                CookOff coUitdager = new CookOff(activiteitUitdager.getId(), activiteitUitdager.totaalbedrag, activiteitUitdager.omschrijving, activiteitUitdager.host, activiteitUitdager.starttijd, false, null);
+    //                CookOff coVerdediger = new CookOff(activiteitVerdediger.getId(), activiteitVerdediger.totaalbedrag, activiteitVerdediger.omschrijving, activiteitVerdediger.host, activiteitVerdediger.starttijd, true, coUitdager);
+    //                coUitdager.tegenstander = coVerdediger;
 
-                activiteiten.add(activiteitUitdager);
-                activiteiten.add(activiteitVerdediger);
-                return true;
+                    activiteiten.add(activiteitUitdager);
+                    activiteiten.add(activiteitVerdediger);
+                    return true;
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
         }
 

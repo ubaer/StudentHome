@@ -30,7 +30,7 @@ public class Database {
             System.err.println("Cannot create connection");
         }
         try {
-            conn = DriverManager.getConnection("jdbc:mysql://db4free.net:3306/studenthouse", "studenthouse", "test01");
+            conn = DriverManager.getConnection("jdbc:mysql://db4free.net:3306/studenthouse", "studenthouse", "fdcd9f");
             return true;
         } catch (SQLException ex) {
             System.out.println("SQLException: " + ex.getMessage());
