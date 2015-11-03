@@ -1,9 +1,15 @@
 package nl.tvj.studenthome;
 
+import android.content.Context;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.lang.reflect.Array;
 import java.sql.SQLException;
@@ -12,7 +18,11 @@ import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
+    LocationManager locationManager;
+    LocationListener locationListener;
     Database dbm = new Database();
+    Gebruiker gebruiker;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,13 +31,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 try {
-                   boolean testbool =  DatabaseTest();
+                    gebruiker = dbm.getGebruikerVanGebruikersnaam("uber");
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
             }
         });
         mythread.start();
+        setUserLocation();
     }
 
     @Override
@@ -55,5 +66,44 @@ public class MainActivity extends AppCompatActivity {
         Gebruiker test = new Gebruiker(1, "geb","pass","naam");
         Activiteit activiteit = new Avondeten(1,1,"ok",test, new Date());
         return dbm.addDeelnemer(test, activiteit);
+    }
+    public void setUserLocation()
+    {
+        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE); //Access the location manager (register to recieve updates)
+        locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                try {
+                    gebruiker.lastLong =  location.getLongitude();
+                    gebruiker.lastLong =  location.getLatitude();
+                    dbm.setGebruikerLocatie(gebruiker.id, gebruiker.lastLong, gebruiker.lastLat);
+                    Toast.makeText(MainActivity.this ,String.valueOf(gebruiker.lastLong)+"  "+ String.valueOf(gebruiker.lastLat), Toast.LENGTH_SHORT).show();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String provider) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String provider) {
+
+            }
+
+        };
+
+        try{
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
     }
 }
