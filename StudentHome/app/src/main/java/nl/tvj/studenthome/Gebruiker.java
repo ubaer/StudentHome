@@ -6,7 +6,6 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.widget.TextView;
-import android.service.*;
 
 
 import java.util.ArrayList;
@@ -27,6 +26,8 @@ public class Gebruiker {
         this.gebruikersnaam = gebruikersnaam;
         this.wachtwoord = wachtwoord;
         this.naam = naam;
+        this.lastLong = 0;
+        this.lastLat = 0;
     }
     public int getId() { return id; }
     public String getNaam(){
