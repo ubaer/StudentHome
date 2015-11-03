@@ -162,4 +162,18 @@ public class Database {
         }
         return gelukt;
     }
+
+    public boolean addVotingOption(Activiteit activiteit, String option) throws SQLException {
+        boolean gelukt = false;
+        try {
+            connect();
+            conn.createStatement().execute("insert into `avondetenOptions` (`avondetenID`, `option`) values("+activiteit.getId()+","+option+")");
+            gelukt = true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            conn.close();
+        }
+        return gelukt;
+    }
 }
