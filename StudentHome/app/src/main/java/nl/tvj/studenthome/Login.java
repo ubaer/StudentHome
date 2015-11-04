@@ -61,37 +61,38 @@ public class Login extends AppCompatActivity {
         protected void onPostExecute(Void param) {
             if (connected) {
                 Toast.makeText(Login.this, "Database connectie geslaagd", Toast.LENGTH_SHORT).show();
-                System.out.println("Database connectie");
+                System.out.println("Database connectie geslaagd");
+
+                //  Gebruiker en studentenhuis ophalen uit de database
+                Gebruiker g = null;
+                Studentenhuis s = null;
+
+                //  Omzetten naar JSON objecten zodat deze in de Shared Preferences opgeslagen kunnen
+                //  worden
+                if (g != null && s != null)
+                {
+                    Gson gson = new Gson();
+                    String ingelogdeGebruiker = gson.toJson(g);
+                    String studentenhuis = gson.toJson(s);
+
+                    //  In shared preferences de session (ingelogde gebruiker en bijbehorende studentenhuis)
+                    //  opslaan
+                    SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(Login.this);
+                    SharedPreferences.Editor editor = sharedPref.edit();
+                    editor.putString("user", ingelogdeGebruiker);
+                    editor.putString("home", studentenhuis);
+                }
+
+                //  Open 'main menu' scherm van een studentenhuis
+                Intent mainMenu = new Intent(Login.this, MainMenu.class);
+                System.out.println("Opened main menu");
+                Login.this.startActivity(mainMenu);
             }
             else
             {
                 Toast.makeText(Login.this, "Database connectie gefaald", Toast.LENGTH_SHORT).show();
+                System.out.println("Database connectie gefaald");
             }
-
-            //  Gebruiker en studentenhuis ophalen uit de database
-            Gebruiker g = null;
-            Studentenhuis s = null;
-
-            //  Omzetten naar JSON objecten zodat deze in de Shared Preferences opgeslagen kunnen
-            //  worden
-            if (g != null && s != null)
-            {
-                Gson gson = new Gson();
-                String ingelogdeGebruiker = gson.toJson(g);
-                String studentenhuis = gson.toJson(s);
-
-                //  In shared preferences de session (ingelogde gebruiker en bijbehorende studentenhuis)
-                //  opslaan
-                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(Login.this);
-                SharedPreferences.Editor editor = sharedPref.edit();
-                editor.putString("user", ingelogdeGebruiker);
-                editor.putString("home", studentenhuis);
-            }
-
-            //  Open 'main menu' scherm van een studentenhuis
-            Intent mainMenu = new Intent(Login.this, MainMenu.class);
-            System.out.println("Opened main menu");
-            Login.this.startActivity(mainMenu);
         }
     }
 }
