@@ -152,7 +152,11 @@ public class Studentenhuis {
         boolean returnValue = false;
 
         if (!alBeoordeeld) {
-            returnValue = activiteit.addBeoordeling(new Beoordeling(beoordeeldDoor, Beoordeling));
+            try {
+                returnValue = activiteit.addBeoordeling(new Beoordeling(beoordeeldDoor, Beoordeling));
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
 
             //TODO vergelijken van cook-off resultaten
 //            if (activiteit.getIedereenGestemd() && activiteit instanceof CookOff) {

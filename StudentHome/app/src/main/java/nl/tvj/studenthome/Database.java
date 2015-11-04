@@ -4,12 +4,15 @@ import android.os.StrictMode;
 
 import java.lang.reflect.Array;
 import java.sql.Connection;
+
 import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by Kevin on 22-10-2015.
@@ -155,6 +158,52 @@ public class Database {
             connect();
             conn.createStatement().execute("INSERT INTO Beoordeling VALUES ("+activiteit.getId()+","+beoordeling.beoordeeldDoor.getId()+","+beoordeling.beoordeling+")");
            gelukt = true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            conn.close();
+        }
+        return gelukt;
+    }
+
+    public boolean addVotingOption(Activiteit activiteit, String option) throws SQLException {
+        boolean gelukt = false;
+        try {
+            connect();
+            conn.createStatement().execute("insert into `avondetenOptions` (`avondetenID`, `option`) values("+activiteit.getId()+","+option+")");
+            gelukt = true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            conn.close();
+        }
+        return gelukt;
+    }
+    public Gebruiker getGebruikerVanGebruikersnaam(String gebruikersnaam) throws SQLException {
+        Gebruiker returnGebruiker = null;
+        try {
+            connect();
+            ResultSet rs = conn.prepareStatement("SELECT g.* FROM Gebruiker g, StudentenHuis sh WHERE sh.`ID` = 1 AND g.`StudentenhuisID` = sh.`ID` AND g.gebruikersnaam = "+gebruikersnaam).executeQuery();
+            while (rs.next()) {
+                int id = rs.getInt(1);
+                String gnaam = rs.getString(2);
+                String wachtwoord = rs.getString(3);
+                String naam = rs.getString(4);
+                returnGebruiker = new Gebruiker(id, gnaam, wachtwoord, naam);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            conn.close();
+        }
+        return returnGebruiker;
+    }
+    public boolean setGebruikerLocatie(int gebruikersID, double longtitude, double latitude) throws SQLException {
+        boolean gelukt = false;
+        try {
+            connect();
+            conn.createStatement().execute("insert into `LocatieGebruiker` (`gebruikerID`, `long`, `lat`, `datetime`) values("+gebruikersID+","+longtitude+","+latitude+",'"+ new Date()+"')");
+            gelukt = true;
         } catch (SQLException e) {
             e.printStackTrace();
         }finally {
